@@ -1,5 +1,6 @@
-use std::fmt;
+use std::{fmt, slice::Windows};
 
+use crate::FightResult::*;
 use crate::{card::Card, FightResult};
 
 pub struct Shop {
@@ -26,7 +27,25 @@ impl Shop {
     /// this store wins, FightResult::Loss if this store loses, and a
     /// FightResult::Tie if both stores win the same number of battles.
     pub fn fight_store(&self, other: &Shop) -> FightResult {
-        todo!()
+        let mut score = 0;
+
+        for this_card in &self.cards {
+            for other_card in &other.cards {
+                let result: FightResult = this_card.fight(other_card);
+
+                score += match result {
+                    Win => 1,
+                    Loss => -1,
+                    _ => 0,
+                };
+            }
+        }
+
+        match score {
+            1.. => Win,
+            0 => Tie,
+            _ => Loss,
+        }
     }
 }
 
