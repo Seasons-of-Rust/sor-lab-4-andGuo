@@ -1,6 +1,7 @@
 use std::fmt;
 
 use crate::FightResult;
+use crate::FightResult::*;
 
 /// A Card is a card stores a price, health, and damage.
 pub struct Card {
@@ -11,7 +12,16 @@ pub struct Card {
 
 impl Card {
     pub fn fight(&self, other: &Card) -> FightResult {
-        todo!()
+        let result = (
+            self.health as i32 - other.damage as i32 <= 0,
+            other.health as i32 - self.damage as i32 <= 0,
+        );
+        match result {
+            (true, true) => Tie,
+            (false, true) => Win,
+            (true, false) => Loss,
+            (false, false) => Draw,
+        }
     }
 
     /// Give a play by play of the battle
